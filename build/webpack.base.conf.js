@@ -78,5 +78,9 @@ module.exports = {
     net: 'empty',
     tls: 'empty',
     child_process: 'empty'
+  },
+  watchOptions: {
+    aggregateTimeout: 300,
+    poll: 1000
   }
 }
