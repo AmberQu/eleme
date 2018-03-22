@@ -16,7 +16,7 @@
 					<div class="pay" :class="payClass">{{payDesc}}</div>
 				</div>
 			</div>
-			<transition-group name="drop" tag="div" class="ball-container" v-on:before-enter="beforeEnter" v-on:enter="enter" v-on:after-enter="afterEnter">
+			<transition-group name="drop" tag="div" class="ball-container" @before-enter="beforeEnter" @enter="enter" @after-enter="afterEnter">
 				<div v-for="(ball,key) in balls" v-bind:key="key" v-show="ball.show" class="ball">
 					<div class="inner inner-hook"></div>
 				</div>

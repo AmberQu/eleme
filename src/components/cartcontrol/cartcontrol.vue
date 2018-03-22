@@ -1,5 +1,5 @@
 <template>
-	<div class="cartcontrol">
+	<div class="cartcontrol" @click.stop>
 		<transition name="move">
 			<div class="cart-decrease icon-remove_circle_outline" v-show="food.count>0" @click="decreaseCart"></div>
 		</transition>
