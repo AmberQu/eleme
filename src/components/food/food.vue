@@ -29,6 +29,11 @@
 					<h1 class="title">商品信息</h1>
 					<p class="text">{{food.info}}</p>
 				</div>
+				<split></split>
+				<div class="rating">
+					<div class="title">商品评价</div>
+					<ratingselect :select-type="selectType" :only-content="onlyContent" :desc="desc" :ratings="food.ratings"></ratingselect>
+				</div>
 			</div>
 		</div>
 	</transition>
@@ -38,6 +43,11 @@
 	import Vue from 'vue'
 	import cartcontrol from '@/components/cartcontrol/cartcontrol'
 	import split from '@/components/split/split'
+	import ratingselect from '@/components/ratingselect/ratingselect'
+
+	const POSITIVE=0
+	const NEGATIVE=1
+	const ALL=2
 
 	export default{
 		props:{
@@ -47,12 +57,21 @@
 		},
 		data(){
 			return {
-				showFlag:false
+				showFlag:false,
+				selectType:ALL,
+				onlyContent:true,
+				desc:{
+					all:'全部',
+					positive:'推荐',
+					negative:'吐槽'
+				}
 			}
 		},
 		methods:{
 			show(){
 				this.showFlag=true
+				this.selectType=ALL
+				this.onlyContent=true
 				this.$nextTick(()=>{
 					if(!this.scroll){
 						this.scroll=new BScroll(this.$refs.food,{
@@ -76,7 +95,8 @@
 		},
 		components:{
 			cartcontrol,
-			split
+			split,
+			ratingselect
 		}
 	}
 </script>
@@ -178,4 +198,11 @@
 				padding 0 8px
 				font-size 12px
 				color rgb(77,85,93)
+		.rating
+			padding-top 18px
+			.title
+				line-height 14px
+				margin-left 18px
+				font-size 14px
+				color rgb(7,17,27)
 </style>
