@@ -33,6 +33,21 @@
 				<div class="rating">
 					<div class="title">商品评价</div>
 					<ratingselect :select-type="selectType" :only-content="onlyContent" :desc="desc" :ratings="food.ratings"></ratingselect>
+					<div class="rating-wrapper">
+						<ul v-show="food.ratings && food.ratings.length">
+							<li v-for="rating in food.ratings" class="rating-item">
+								<div class="user">
+									<span class="name">{{rating.username}}</span>
+									<img :src="rating.avatar" width="12" height="12" class="avatar">
+								</div>
+								<div class="time">{{rating.rateTime}}</div>
+								<p class="text">
+									<span :class="{'icon-thumb_up':rating.rateType===0,'icon-thumb_down':rating.rateType===1}"></span>
+								</p>
+							</li>
+						</ul>
+						<div class="no-rating" v-show="!food.ratings || !food.ratings.length"></div>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -71,7 +86,7 @@
 			show(){
 				this.showFlag=true
 				this.selectType=ALL
-				this.onlyContent=true
+				this.onlyContent=false
 				this.$nextTick(()=>{
 					if(!this.scroll){
 						this.scroll=new BScroll(this.$refs.food,{
