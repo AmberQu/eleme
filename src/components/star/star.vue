@@ -64,7 +64,7 @@
 					bg-image('star48_half')
 				&.off
 					bg-image('star48_off')
-		&.star-32
+		&.star-36
 			.star-item
 				width 15px
 				height 15px
