@@ -22,15 +22,19 @@
 						<div class="content"><span class="stress">{{seller.deliveryTime}}</span>分钟</div>
 					</li>
 				</ul>
+				<div class="favorite" @click="toggleFavorite">
+					<span class="icon-favorite" :class="{'active':favorite}"></span>
+					<span class="text">{{favoriteText}}</span>
+				</div>
 			</div>
 			<split></split>
 			<div class="bulletin">
-				<div class="title">公告与活动</div>
-				<div class="content-wrapper border-1px">
+				<h1 class="title">公告与活动</h1>
+				<div class="content-wrapper">
 					<p class="content">{{seller.bulletin}}</p>
 				</div>
 				<ul v-if="seller.supports" class="supports">
-					<li class="support-item border-1px" v-for="(item,key) in seller.supports">
+					<li class="support-item" v-for="(item,key) in seller.supports">
 						<span class="icon" :class="classMap[seller.supports[key].type]"></span>
 						<span class="text">{{seller.supports[key].description}}</span>
 					</li>
@@ -47,12 +51,20 @@
 					</ul>
 				</div>
 			</div>
+			<split></split>
+			<div class="info">
+				<h1 class="title">商家信息</h1>
+				<ul>
+					<li class="info-item" v-for="info in seller.infos">{{info}}</li>
+				</ul>
+			</div>
 		</div>
 	</div>
 </template>
 
 <script type="text/ecmascript-6">
 	import BScroll from "better-scroll"
+	import {saveToLocal,loadFromLocal} from "@/common/js/store"
 	import star from "@/components/star/star"
 	import split from "@/components/split/split"
 
@@ -60,6 +72,18 @@
 		props:{
 			seller:{
 				type:Object
+			}
+		},
+		data(){
+			return {
+				favorite:(()=>{
+					return loadFromLocal(this.seller.id,"favorite",false)
+				})()
+			}
+		},
+		computed:{
+			favoriteText(){
+				return this.favorite?'已收藏':'收藏'
 			}
 		},
 		created() {
@@ -80,6 +104,13 @@
 			})
 		},
 		methods:{
+			toggleFavorite(event){
+				if(!event._constructed){
+					return
+				}
+				this.favorite=!this.favorite
+				saveToLocal(this.seller.id,"favorite",this.favorite)
+			},
 			_initScroll(){
 				if(!this.scroll){
 					this.scroll=new BScroll(this.$refs.seller,{
