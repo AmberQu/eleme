@@ -16,11 +16,15 @@
 					<div class="pay" :class="payClass">{{payDesc}}</div>
 				</div>
 			</div>
-			<transition-group name="drop" tag="div" class="ball-container" @before-enter="beforeEnter" @enter="enter" @after-enter="afterEnter">
-				<div v-for="(ball,key) in balls" v-bind:key="key" v-show="ball.show" class="ball">
-					<div class="inner inner-hook"></div>
+			<div class="ball-container">
+				<div v-for="ball in balls">
+					<transition name="drop" @before-enter="beforeDrop" @enter="dropping" @after-enter="afterDrop">
+						<div class="ball" v-show="ball.show">
+							<div class="inner inner-hook"></div>
+						</div>
+					</transition>
 				</div>
-			</transition-group>
+			</div>
 			<transition name="fold">
 				<div class="shopcart-list" v-show="listShow">
 					<div class="list-header">
@@ -35,7 +39,7 @@
 									<span>￥{{food.price*food.count}}</span>
 								</div>
 								<div class="cartcontrol-wrapper">
-									<cartcontrol :food="food"></cartcontrol>
+									<cartcontrol @add="addFood" :food="food"></cartcontrol>
 								</div>
 							</li>
 						</ul>
@@ -162,7 +166,7 @@
 					}
 				}
 			},
-			beforeEnter(el){
+			beforeDrop(el){
 				let count=this.balls.length
 				while(count--){
 					let ball=this.balls[count]
@@ -179,7 +183,7 @@
 					}
 				}
 			},
-			enter(el){
+			dropping(el,done){
 				/* eslint-disable no-unused-vars */
 				let rf=el.offsetHeight
 				this.$nextTick(()=>{
@@ -188,9 +192,10 @@
 					let inner=el.getElementsByClassName('inner-hook')[0]
 					inner.style.webkitTransform='translate3d(0,0,0)'
 					inner.style.transform='translate3d(0,0,0)'
+					el.addEventListener('transitionend', done);
 				})
 			},
-			afterEnter(el){
+			afterDrop(el){
 				let ball=this.dropBalls.shift()
 				if(ball){
 					ball.show=false
@@ -216,6 +221,9 @@
 					return
 				}
 				window.alert(`需支付${this.totalPrice}元`)
+			},
+			addFood(target) {
+				this.drop(target);
 			}
 		},
 		components:{
@@ -317,14 +325,13 @@
 				left 32px
 				bottom 22px
 				z-index 200
-				&.drop-enter-active
-					transition all .4s cubic-bezier(.49,-.29,.75,.41)
-					.inner
-						width 16px
-						height 16px
-						border-radius 50%
-						background rgb(0,160,220)
-						transition all .4s linear
+				transition all .4s cubic-bezier(.49,-.29,.75,.41)
+				.inner
+					width 16px
+					height 16px
+					border-radius 50%
+					background rgb(0,160,220)
+					transition all .4s linear
 		.shopcart-list
 			position absolute
 			top 0
